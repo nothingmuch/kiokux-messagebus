@@ -71,7 +71,7 @@ sub objects_to_message_entry {
 
     my ( $message_entry, @other_entries ) = sort { $a->id eq $id ? -1 : 1 } $buffer->entries;
 
-    if ( @other_entries == 1 ) {
+    if ( @other_entries == 1 and @objects == 1 ) {
         return $other_entries[0];
     } else {
         $message_entry->backend_data([ $buffer->entries ]);
