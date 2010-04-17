@@ -87,3 +87,53 @@ __PACKAGE__->meta->make_immutable;
 __PACKAGE__
 
 __END__
+
+=head1 NAME
+
+KiokuX::MessageBus - Use L<KiokuDB> as a message broker
+
+=head1 SYNOPSIS
+
+    my $bus = KiokuX::MessageBus->new( directory => $kiokudb );
+
+    my $str = $bus->encode($some_object);
+
+    $message_queue->send($str);
+
+=head1 DESCRIPTION
+
+B<NOTE>: since L<KiokuDB> does not yet support event driven operations, this
+module is likely to change when that happens in order to better integrate into
+event driven applications.
+
+This class implements a filter that converts a list of objects into a string
+using L<KiokuDB>'s collapsing code.
+
+It can take an optional L<KiokuDB> directory, in which case database objects
+can be referred to as well.
+
+=head1 METHODS
+
+=over 4
+
+=item encode @objects
+
+Returns a string that can be sent.
+
+=item decode $string
+
+Returns the list of objects passed to the C<encode> which created the message
+string.
+
+=back
+
+=head1 SCOPES TRANSACTIONS
+
+If using a shared database for referenced objects, messages should be queued
+until transactions have been comitted before they are sent out, otherwise the
+receiver might not see the effects.
+
+All sent and received objects are registered with the live object set, so be
+sure to create live object scopes, but also very importantly, be sure to
+dispose of them. If you're receiving messages in a long running loop, create
+one scope per C<decode> call.
