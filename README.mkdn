@@ -1,0 +1,9 @@
+This is a simple filter that uses KiokuDB as an object request broker
+thingamabob.
+
+Any list of objects can be a message. Objects which are registered in the
+database are passed by reference, and other objects are serialized directly
+into the message string.
+
+This code will change when KiokuDB gets support for nonblocking usage,
+otherwise in an event driven API the `decode` method might block.
